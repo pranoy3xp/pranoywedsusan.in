@@ -24,7 +24,9 @@ jobs:
           # npm 11 (bundled with Node 24) matches the version that generated package-lock.json.
           node-version: 24
           cache: npm
-      - run: npm ci
+      # npm install (not npm ci): the Windows-generated lockfile omits Linux-only optional
+      # peer deps (@emnapi/*), which makes npm ci refuse to run on the Ubuntu runner.
+      - run: npm install --no-audit --no-fund
       - run: npm run build
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
